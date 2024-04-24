@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Form</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Attendance Form</h2>
+        <form> <!-- Corrected the function name here -->
+            <div class="form-group">
+                <label for="roll-no">Roll No:</label>
+                <input type="text" id="roll-no" name="roll-no" required>
+            </div>
+            <div class="form-group">
+                <label for="student-name">Student Name:</label>
+                <input type="text" id="student-name" name="student-name" required>
+            </div>
+            <div class="form-group">
+                <label for="attendance-date">Attendance Date:</label>
+                <input type="date" id="attendance-date" name="attendance-date" required>
+            </div>
+            <div class="form-group">
+                <label for="activity">Activity:</label>
+                <input type="text" id="activity" name="activity" required>
+            </div>
+            <div class="form-group">
+                <label for="faculty">Respective Faculty:</label>
+                <input type="text" id="faculty" name="faculty" required>
+            </div>
+            <div class="form-group">
+                <label for="bonus-attendance">Bonus Attendance:</label>
+                <input type="number" id="bonus-attendance" name="bonus-attendance" min="0" step="1" value="0">
+            </div>
+
+            <div class="form-group">
+                <label for="faculty-mail">faculty email</label>
+                <input type="email" id="faculty_mail"  required>
+            </div>
+
+            <button type="submit" id = "submitButton">Submit</button>
+            
+        </form>
+
+        <script>
+            const btn = document.getElementById('submitButton'); // assuming your form id is 'attendanceForm'
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+        
+                const stu_name = document.getElementById("student-name").value;
+                const stu_rollno = document.getElementById("roll-no").value;
+                const stu_ad = document.getElementById("attendance-date").value;
+                const stu_activity = document.getElementById("activity").value;
+                const stu_faculty = document.getElementById("faculty").value;
+                const stu_bonus_attendance = document.getElementById("bonus-attendance").value;
+                const faculty_mail= document.getElementById("faculty_mail").value;
+
+                const formData = {
+                    stu_name,
+                    stu_rollno,
+                    stu_ad,
+                    stu_activity,
+                    stu_faculty,
+                    stu_bonus_attendance,
+                    faculty_mail
+                };
+
+                localStorage.setItem(stu_name,JSON.stringify(formData))
+        
+                try {
+                    const response = await fetch('http://localhost:5000/sendEmail', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    if (response.ok) {
+                        alert('Email sent successfully!');
+                    } else {
+                        alert('Failed to send email.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to send email. Please try again later.');
+                }
+            });
+        </script>
+        
+        
+    </div>
+    <script src="server.js"></script>
+</body>
+</html>
